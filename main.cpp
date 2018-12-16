@@ -1,6 +1,8 @@
 #include <iostream>
 
-int a[20][20], n = 7;
+int a[20][20], n = 7, k, viz[20], c[20], prim, ultim, prieteni[20], contor, k1;
+int ince[20];
+bool n_am = false;
 
 void init() {
 
@@ -12,17 +14,32 @@ void init() {
     a[3][4] = a[4][3] = 1;
     a[4][5] = a[5][4] = 1;
 
-    
+    prim = ultim = 1;
+    c[ultim] = k;
+    viz[k] = 1;
 }
 
-void roy_warshall() {
+void prelu() {
 
-    for(int k = 1; k <= n; k++)
+    k = c[prim];
+    contor = 0;
     for(int i = 1; i <= n; i++)
-    for(int j = 1; j <= n; j++)
-    if(a[i][j] == 0 && i != k && k != j)
-    a[i][j] = a[i][k] * a[k][j];
+    if(a[k][i] == 1 && viz[i] == 0) {
+
+        ultim++;
+        c[ultim] = i;
+        viz[i] = 1;
+        contor++;
+
+    }
+
+    k1++;
+    prieteni[k1] = contor;
+    ince[k1] = k;
+
+    prim++;
 }
+
 
 void prntMatrix() {
 
@@ -38,8 +55,29 @@ void prntMatrix() {
 int main() {
 
     init();
-    roy_warshall();
-    prntMatrix();
+    while(prim <= ultim)
+    prelu();
+
+    int maxi = 0, start;
+    for(int i = 1; i <= k1; i++)
+    if(prieteni[i] > maxi) {
+    maxi = prieteni[i];
+    start = ince[i];
+
+    }
+
+    init();
+    while(prim <= ultim && !n_am) {
+
+        prelu();
+        if(k == start)
+        n_am = true;
+
+    }
+
+    prelu();
+    for(int i = 1; i <= n; i++)
+    std::cout << c[i] << ' ';
 
     return 0;
 }
